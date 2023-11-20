@@ -1,0 +1,1 @@
+# initialisation d'un projet dans le cadre de la formation Diginamic
