@@ -5,4 +5,4 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Theme(Base):
-    __tablename__ = "theme"
+    __tablename__ = "Theme"
