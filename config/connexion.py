@@ -15,7 +15,7 @@ connector = "mysql+pymysql"
 user = config("DB_USER")
 password = config("DB_PSWD")
 host = config("DB_HOST")
-database = "BDD_projet_client"
+database = "Librairie"
 
 engine = create_engine(f"{connector}://{user}:{password}@{host}/{database}")
 conn = engine.connect()

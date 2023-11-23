@@ -3,6 +3,7 @@ from sqlalchemy import String, Date
 from sqlalchemy.orm import Mapped, mapped_column
 
 class Ouvrage(Base):
+    __tablename__ = "Ouvrage"
     id_ouvrage : Mapped[int] = mapped_column(PRIMARY_KEY = True, autoincrement = True)
     titre_ouvrage : Mapped[str] = mapped_column(String(255))
     auteur_ouvrage : Mapped[str] =  mapped_column(String(255))
@@ -17,3 +18,4 @@ class Ouvrage(Base):
     table_des_matieres_ouvrage : Mapped[str] =  mapped_column(String(255))
     mot_cle_ouvrage : Mapped[str] =  mapped_column(String(255))
     description_ouvrage : Mapped[str] =  mapped_column(String(255))
+
