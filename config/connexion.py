@@ -1,6 +1,8 @@
 from sqlalchemy import create_engine, ForeignKey, String, select
 from sqlalchemy.orm import DeclarativeBase
 from decouple import config
+from sqlalchemy.orm import sessionmaker
+
 
 class Base(DeclarativeBase):
     pass
@@ -19,9 +21,12 @@ database = "Librairie"
 
 engine = create_engine(f"{connector}://{user}:{password}@{host}/{database}")
 conn = engine.connect()
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 
 # créer les tables
 class Base(DeclarativeBase):
     pass
+
 
 Base.metadata.create_all(engine)
