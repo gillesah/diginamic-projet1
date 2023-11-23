@@ -1,0 +1,2 @@
+class ThemeOuvrage:
+    pass
