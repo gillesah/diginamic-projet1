@@ -5,5 +5,5 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class ThemeOuvrage(Base):
-    __tablename__ = "themeouvrage"
+    __tablename__ = "Theme_Ouvrage"
 
