@@ -7,7 +7,7 @@ app = FastAPI()
 ouvrage_router = APIRouter()
 
 
-@app.post("/ouvrages/", status_code=status.HTTP_201_CREATED)
+@ouvrage_router.post("/ouvrages/", status_code=status.HTTP_201_CREATED)
 def create_ouvrage(ouvrage: OuvrageCreate):
     db = SessionLocal()
     db_ouvrage = Ouvrage(**ouvrage.dict())
