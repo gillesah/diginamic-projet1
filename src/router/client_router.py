@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from config.connexion import get_db
-from models.client import Client
+from src.models.client import Client
 from src.schema.client_schema import ClientSchema, ClientSchemaIn, ClientSchemaOut
 from typing import List
 
@@ -10,6 +10,7 @@ client_router = APIRouter(tags=["client"], prefix="/client")
 
 @client_router.post("/add_client", response_model=ClientSchemaOut, summary="Ajoute les informations pour un client", status_code=status.HTTP_201_CREATED)
 def add_client(client: ClientSchema, db: Session = Depends(get_db)):
+    """Permet d'ajouter les informations pour un nouveau client"""
     client_db = Client(**client.dict())
     db.add(client_db)
     db.commit()
