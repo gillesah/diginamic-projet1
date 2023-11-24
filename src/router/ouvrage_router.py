@@ -10,7 +10,7 @@ app = FastAPI()
 ouvrage_router = APIRouter()
 
 
-# GET : lecture des ouvrages
+# GET : lecture d'un ouvrages
 @ouvrage_router.get("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK)
 def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
     """
@@ -30,9 +30,8 @@ def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
         db.close()
         raise HTTPException(status_code=404, detail="ouvrage pas trouvé")
 
+
 # GET : lecture des ouvrages
-
-
 @ouvrage_router.get("/ouvrages", status_code=status.HTTP_200_OK)
 def read_ouvrages(db: Session = Depends(get_db)):
     """
