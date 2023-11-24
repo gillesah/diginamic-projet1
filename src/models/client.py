@@ -5,9 +5,11 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
 class Client(Base):
+    """
+    Table Client
+    """
     __tablename__ = "Client"
-    id_client: Mapped[int] = mapped_column(
-        primary_key=True, autoincrement=True)
+    id_client: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     nom_client: Mapped[str] = mapped_column(String(255))
     prenom_client: Mapped[str] = mapped_column(String(255))
     email_client: Mapped[str] = mapped_column(String(255))
