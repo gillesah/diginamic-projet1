@@ -16,3 +16,17 @@ def create_ouvrage(ouvrage: OuvrageCreate):
     db.refresh(db_ouvrage)
     db.close()
     return db_ouvrage
+
+
+@ouvrage_router.delete("/ouvrages/{id_ouvrage}", status_code=status.HTTP_201_CREATED)
+def delete_ouvrage(id_ouvrage: int):
+    db = SessionLocal()
+    db_ouvrage = db.get(Ouvrage, id_ouvrage)
+
+    if db_ouvrage:
+        db.delete(db_ouvrage)
+        db.commit()
+        return {"message": "ouvrage supprimé"}
+    else:
+        db.close()
+        raise HTTPException(status_code=404, detail="ouvrage pas trouvé")
