@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException, status, APIRouter, Depends
 from sqlalchemy.orm import Session
-from config.connexion import SessionLocal, get_db
+from config.connexion import get_db
 from src.models.ouvrage import Ouvrage, OuvrageCreate, OuvrageUpdate
 
 app = FastAPI()

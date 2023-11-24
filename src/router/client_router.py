@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import select
 from config.connexion import get_db
-from models.client import Client
+from src.models.client import Client
 from src.schema.client_schema import ClientSchema, ClientSchemaIn, ClientSchemaOut
 from typing import List
 
