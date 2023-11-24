@@ -21,10 +21,20 @@ database = "Librairie"
 
 engine = create_engine(f"{connector}://{user}:{password}@{host}/{database}")
 conn = engine.connect()
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+def get_db():
+    try:
+        db = Session()
+        yield db
+    finally:
+        db.close()
 
 
 # créer les tables
+
+
 class Base(DeclarativeBase):
     pass
 
