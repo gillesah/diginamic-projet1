@@ -24,7 +24,17 @@ conn = engine.connect()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
+def get_db():
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
+
+
 # créer les tables
+
+
 class Base(DeclarativeBase):
     pass
 
