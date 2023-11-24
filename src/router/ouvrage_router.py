@@ -30,6 +30,23 @@ def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
         db.close()
         raise HTTPException(status_code=404, detail="ouvrage pas trouvé")
 
+# GET : lecture des ouvrages
+
+
+@ouvrage_router.get("/ouvrages", status_code=status.HTTP_200_OK)
+def read_ouvrages(db: Session = Depends(get_db)):
+    """
+    lecture de tous les ouvrages de la base de données.
+
+    Args:
+        db: La session de base de données.
+
+    Returns:
+        une liste des ouvrages.
+    """
+    ouvrages = db.query(Ouvrage).all()
+    return ouvrages
+
 
 # POST : création d'un ouvrage
 @ouvrage_router.post("/ouvrages/", status_code=status.HTTP_201_CREATED)
