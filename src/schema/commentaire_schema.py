@@ -7,6 +7,10 @@ class Commentaire(BaseModel):
     auteur_commentaire : str 
     titre_commentaire : str 
     
+    class Config:
+        orm_mode = True
+        from_attributes = True
+    
 class Commentaire_create(Commentaire):
     date_publication_commentaire : Date 
     auteur_commentaire : str 
