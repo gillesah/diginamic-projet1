@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from typing import Optional
 from sqlalchemy import String, select
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session, sessionmaker
 from config.connexion import Base, engine
 from fastapi import FastAPI
 from src.models.client import Client
@@ -9,8 +9,9 @@ from src.models.ouvrage import Ouvrage
 # from models.theme import Theme
 # from models.commentaire import Commentaire
 # from models.theme_ouvrage import ThemeOuvrage
+# ??? import src.router ???
 from src.router.ouvrage_router import ouvrage_router
-from fastapi import FastAPI
+from src.router.client_router import client_router
 
 Base.metadata.create_all(engine)
 
@@ -27,3 +28,4 @@ app = FastAPI()
 
 # router d'Ouvrage
 app.include_router(ouvrage_router)
+app.include_router(client_router)
