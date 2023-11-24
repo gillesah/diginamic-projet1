@@ -16,19 +16,14 @@ def add_client(client: ClientSchema, db: Session = Depends(get_db)):
     db.commit()
     return ClientSchemaOut.from_orm(client_db)
 
-@client_router.get("/list", response_model=List[ClientSchemaOut], summary="Affiche les informations client", status_code=status.HTTP_200_OK)
-async def get_client():
+@client_router.get("/", response_model=List[ClientSchemaOut], summary="Affiche les informations client", status_code=status.HTTP_200_OK)
+async def get_client(db: Session = Depends(get_db)):
     """Permet d'afficher les informations des clients"""
-    try:
-        l = []
-        db = Depends(get_db)
-        req = select(Client)
-        result = db.scalars(req).all()
-        for item in result:
-            l.append(ClientSchemaOut(**item.dict()))
-        return l
-    except Exception as e:
-        print(e)
-        return []
+    l = []
+    q = select(Client)
+    result = db.scalars(q).all()
+    for item in result:
+        l.append(ClientSchemaOut.from_orm(item))
+    return l
 
 
