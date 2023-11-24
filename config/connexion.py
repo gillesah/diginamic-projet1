@@ -19,10 +19,7 @@ host = config("DB_HOST")
 database = "Librairie"
 
 engine = create_engine(f"{connector}://{user}:{password}@{host}/{database}")
-conn = engine.connect()
-
-# Gilles
-# SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# conn = engine.connect()
 
 Session = sessionmaker(bind=engine)
 
@@ -35,6 +32,8 @@ def get_db():
         db.close()
 
 # créer les tables
+
+
 class Base(DeclarativeBase):
     pass
 
