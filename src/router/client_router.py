@@ -24,7 +24,7 @@ async def get_client():
     req = select(Client)
     result = db.scalars(req).all()
     for item in result:
-        l.append(ClientSchemaOut(**item))
+        l.append(ClientSchemaOut(**item.dict()))
     return l
 
 
