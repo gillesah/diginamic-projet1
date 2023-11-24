@@ -35,6 +35,8 @@ def get_db():
         db.close()
 
 # créer les tables
+
+
 class Base(DeclarativeBase):
     pass
 
