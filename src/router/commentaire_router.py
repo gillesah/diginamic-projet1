@@ -1,6 +1,6 @@
-from fastapi import FastAPI, HTTPException, status, APIRouter
+from fastapi import FastAPI, HTTPException, status, APIRouter, Depends
 from sqlalchemy.orm import Session
-from config.connexion import SessionLocal
+from config.connexion import get_db
 from src.models.commentaire import Commentaire
 from src.schema.commentaire_schema import Commentaire_create, CommentaireResponse, CommentaireUpdate
 
@@ -8,14 +8,19 @@ app = FastAPI()
 commentaire_router = APIRouter()
 
 @app.post("/commentaire/", response_model= CommentaireResponse, tags = ["commentaires"])
-async def create_Commentaire(commentaire : Commentaire):
-    return commentaire
+async def create_Commentaire(commentaire : Commentaire_create,  db: Session = Depends(get_db)):
+    db_comment = Commentaire(**commentaire.dict())
+    db.add(db_comment)
+    db.commit()
+    db.refresh(db_comment)
+    db.close()
+    return db_comment
 
 @app.get("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"])
 async def read_commentaire(commentaire_id : int):
     for comment in TableCommentaire:
         if comment.id_commentaire == commentaire_id:
-            return {f"Auteur : {comment.auteur_commentaire}, publié le {comment.date_publication_commentaire}, titre : {comment.titre_commentaire}"}
+            return {f"Titre : {comment.titre_commentaire}, commentaire : {comment.auteur_commentaire}, publié le {comment.date_publication_commentaire}."}
     raise HTTPException(status_code=404, detail="Comment not found")
 
 @app.put("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaire"])
