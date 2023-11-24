@@ -19,13 +19,16 @@ def add_client(client: ClientSchema, db: Session = Depends(get_db)):
 @client_router.get("/list", response_model=List[ClientSchemaOut], summary="Affiche les informations client", status_code=status.HTTP_200_OK)
 async def get_client():
     """Permet d'afficher les informations des clients"""
-    l = []
-    db = Depends(get_db)
-    req = select(Client)
-    result = db.scalars(req).all()
-    for item in result:
-        l.append(ClientSchemaOut(**item.dict()))
-    return l
-
+    try:
+        l = []
+        db = Depends(get_db)
+        req = select(Client)
+        result = db.scalars(req).all()
+        for item in result:
+            l.append(ClientSchemaOut(**item.dict()))
+        return l
+    except Exception as e:
+        print(e)
+        return []
 
 
