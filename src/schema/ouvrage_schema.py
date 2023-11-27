@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import date
 
 
-class OuvrageCreate(BaseModel):
+class OuvrageStrict(BaseModel):
     titre_ouvrage: str
     auteur_ouvrage: str
     isbn_ouvrage: str
