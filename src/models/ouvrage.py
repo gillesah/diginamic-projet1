@@ -24,3 +24,4 @@ class Ouvrage(Base):
     description_ouvrage: Mapped[str] = mapped_column(String(255))
 
 
+#foreign key
