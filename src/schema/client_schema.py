@@ -10,6 +10,7 @@ class ClientSchema(BaseModel):
     adresse_facturation_client: str | None = None
     
     class Config:
+        # 'orm_mode' has been renamed to 'from_attributes'
         # orm_mode = True
         from_attributes = True
 

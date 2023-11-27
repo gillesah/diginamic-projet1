@@ -12,20 +12,12 @@ from src.models.ouvrage import Ouvrage
 # ??? import src.router ???
 from src.router.ouvrage_router import ouvrage_router
 from src.router.client_router import client_router
+import uvicorn
 
 Base.metadata.create_all(engine)
-
-
-# appel FastApi
 app = FastAPI()
-
-# with Session(engine) as session:
-#     trucmuch = Client(nom_client="BUDULE", prenom_client="christophe", email_client="email@email.com", telephone_client="000000",
-#                       preferences_client="je suis la preference", adresse_livraison_client="adresse livraison", adresse_facturation_client="adresse facturation")
-#     session.add_all([trucmuch])
-#     print(trucmuch)
-#     session.commit()
-
-# router d'Ouvrage
 app.include_router(ouvrage_router)
 app.include_router(client_router)
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
