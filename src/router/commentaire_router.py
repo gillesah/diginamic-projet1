@@ -48,7 +48,7 @@ async def read_commentaire_ouvrage(ouvrage_id : int, db: Session = Depends(get_d
         raise HTTPException(status_code=404, detail="Comment not found.")
     
 @commentaire_router.put("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="modification complete d'une occurence.")
-async def update_commentaire(commentaire_id : int, commentUpdate : CommentaireUpdate, db: Session = Depends(get_db)):
+async def update_commentaire(commentaire_id : int, commentUpdate : CommentaireCreate, db: Session = Depends(get_db)):
     db_commentaire = db.get(Commentaire, commentaire_id)
     if db_commentaire:
         for key, value in commentUpdate.dict().items():
