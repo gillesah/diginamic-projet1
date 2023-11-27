@@ -14,6 +14,7 @@ from src.models.commentaire import Commentaire
 from src.router.ouvrage_router import ouvrage_router
 from src.router.client_router import client_router
 from src.router.commentaire_router import commentaire_router
+import uvicorn
 
 Base.metadata.create_all(engine)
 app = FastAPI()
