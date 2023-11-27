@@ -8,81 +8,71 @@ from src.schema.commentaire_schema import Commentaire_create, CommentaireRespons
 app = FastAPI()
 commentaire_router = APIRouter()
 
-@app.post("/commentaires/", response_model= CommentaireResponse, tags = ["commentaires"], status_code=status.HTTP_201_CREATED, summary="création d'une occurence.")
+@commentaire_router.post("/commentaires/", response_model= CommentaireResponse, tags = ["Commentaires"], status_code=status.HTTP_201_CREATED, summary="création d'une occurence.")
 async def create_Commentaire(commentaire : Commentaire_create, client_id : int, ouvrage_id : int, db: Session = Depends(get_db)):
     db_comment = Commentaire(**commentaire.dict(), id_client = client_id, id_ouvrage = ouvrage_id)
     db.add(db_comment)
     db.commit()
-    return CommentaireResponse.from_orm(db_comment)
+    return db_comment
 
-@app.get("/commentaires/", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation de toute les occurences de commentaires.")
+@commentaire_router.get("/commentaires/", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation de toute les occurences de commentaires.")
 async def read_commentaire(db: Session = Depends(get_db)):
-    db_commentaire = select(Commentaire)
-    if db_commentaire:
-        result = db.scalars(db_commentaire).all()
-        return result
-    else: 
-            raise HTTPException(status_code=404, detail="Comment not found.")
+    commentaires = db.query(Commentaire).all()
+    return commentaires
         
-    # db_commentaire = db.get(Commentaire)
-    # if db_commentaire:
-    #         return {f"Titre : {db_commentaire.titre_commentaire}, commentaire : {db_commentaire.auteur_commentaire}, publié le {db_commentaire.date_publication_commentaire}."}
-    # else : 
-    #     raise HTTPException(status_code=404, detail="Comment not found.")
 
-@app.get("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une occurence d'apres un id.")
+@commentaire_router.get("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une occurence d'apres un id.")
 async def read_commentaire(commentaire_id : int, db: Session = Depends(get_db)):
-    db_commentaire = select(Commentaire).where(id_commentaire = commentaire_id)
+    db_commentaire = db.get(Commentaire, commentaire_id)
     if db_commentaire:
-        result = db.scalars(db_commentaire).all()
-        return result
-    else: 
+            return db_commentaire
+    else : 
         raise HTTPException(status_code=404, detail="Comment not found.")
-    # db_commentaire = db.get(Commentaire, commentaire_id)
-    # if db_commentaire:
-    #         return {f"Titre : {db_commentaire.titre_commentaire}, commentaire : {db_commentaire.auteur_commentaire}, publié le {db_commentaire.date_publication_commentaire}."}
-    # else : 
-    #     raise HTTPException(status_code=404, detail="Comment not found.")
 
-@app.get("/commentaires/{id_client}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaire écrit par un client.")
+@commentaire_router.get("/commentaires/clients{id_client}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaire écrit par un client.")
 async def read_commentaire_client(client_id : int, db: Session = Depends(get_db)):
-    db_commentaire = select(Commentaire).where(id_client = client_id)
+    db_commentaire = select(CommentaireResponse).where(CommentaireResponse.id_client == client_id)
     if db_commentaire:
         result = db.scalars(db_commentaire).all()
         return result
     else: 
         raise HTTPException(status_code=404, detail="Comment not found.")
     
-@app.get("/commentaires/{id_ouvrage}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaires concernant un ouvrage.")
+@commentaire_router.get("/commentaires/ouvrages/{id_ouvrage}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaires concernant un ouvrage.")
 async def read_commentaire_ouvrage(ouvrage_id : int, db: Session = Depends(get_db)):
-    db_commentaire = select(Commentaire).where(id_ouvrage = ouvrage_id)
+    db_commentaire = select(CommentaireResponse).where(CommentaireResponse.id_ouvrage == ouvrage_id)
     if db_commentaire:
         result = db.scalars(db_commentaire).all()
         return result
     else: 
         raise HTTPException(status_code=404, detail="Comment not found.")
     
-@app.put("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaire"], status_code=status.HTTP_200_OK, summary="modification complete d'une occurence.")
+@commentaire_router.put("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="modification complete d'une occurence.")
 async def update_item(commentaire_id : int, commentUpdate : CommentaireUpdate, db: Session = Depends(get_db)):
     db_commentaire = db.get(Commentaire, commentaire_id)
     if db_commentaire:
-        updated_comment = CommentaireResponse(**commentUpdate.dict())
-        db_commentaire[db_commentaire.index(commentaire_id)] = updated_comment
-        return updated_comment
+        for key, value in commentUpdate.dict().items():
+            # attribuer les nouvelles valeurs avec setattr
+            setattr(db_commentaire, key, value)
+        db.commit()
+        return db_commentaire
     else: 
         raise HTTPException(status_code=404, detail="Comment not found.")
 
-@app.patch("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaire"], status_code=status.HTTP_200_OK, summary="modification partielle.")
+@commentaire_router.patch("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="modification partielle.")
 async def patch_item(commentaire_id : int, commentUpdate : CommentaireUpdate, db: Session = Depends(get_db)):
     db_commentaire = db.get(Commentaire, commentaire_id)
-    client_comment = CommentaireResponse(id = commentaire_id,**commentUpdate.dict())
+    updated_comment = commentUpdate.dict(exclude_unset=True)
     if db_commentaire:
-        db_commentaire.copy(update=client_comment)
+        for key, value in updated_comment.items():
+            if hasattr(db_commentaire, key):
+                setattr(db_commentaire, key, value)
+        db.commit()
         return db_commentaire
     else : 
         raise HTTPException(status_code=404, detail="Comment not found")
 
-@app.delete("/commentaires/{id_commentaire}", response_model = dict, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary = "suppression d'une occurence précise.")
+@commentaire_router.delete("/commentaires/{id_commentaire}", response_model = dict, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary = "suppression d'une occurence précise.")
 async def delete_item(commentaire_id : int, db: Session = Depends(get_db)):
     db_commentaire = db.get(Commentaire, commentaire_id)
     if db_commentaire:
