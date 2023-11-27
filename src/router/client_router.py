@@ -113,3 +113,25 @@ async def get_client(id_client: int, client_update: ClientSchemaIn, db: Session 
         return client
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="client not found")
+    
+    
+# Delete
+@client_router.delete("/{id_client}", response_model=dict, summary="Supression des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
+async def delete_client(id_client: int, db: Session = Depends(get_db)):
+    """
+    Permet de supprimer les informations d'un client à paritr de son id_client.
+
+    Args:
+        id_client (int): id du client.
+        db (Session): la session de connection à la base de donnée.
+
+    Returns:
+        un message indiquant que les informations du client ont bien été supprimé.
+    """
+    try:
+        client = db.get(Client, id_client)
+        db.delete(client)
+        db.commit()
+        return {"message": "informations client supprimé"}
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="client not found")
