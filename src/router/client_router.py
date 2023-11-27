@@ -9,8 +9,8 @@ from typing import List
 client_router = APIRouter(tags=["client"], prefix="/client")
 
 # Create
-@client_router.post("/add_client", response_model=ClientSchemaOut, summary="Ajoute les informations pour un nouveau client", status_code=status.HTTP_201_CREATED)
-def add_client(client: ClientSchema, db: Session = Depends(get_db)):
+@client_router.post("/", response_model=ClientSchemaOut, summary="Ajoute les informations pour un nouveau client", status_code=status.HTTP_201_CREATED)
+def post_client(client: ClientSchema, db: Session = Depends(get_db)):
     """
     Permet d'ajouter les informations pour un nouveau client.
 
@@ -67,7 +67,7 @@ async def get_client(id_client: int, db: Session = Depends(get_db)):
 
 # Patch
 @client_router.patch("/{id_client}", response_model=ClientSchemaOut, summary="Mise à jour partielle des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
-async def get_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
+async def patch_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
     """
     Permet de mettre à jour de façon partielle les informations d'un client à partir de son id_client.
 
@@ -93,7 +93,7 @@ async def get_client(id_client: int, client_update: ClientSchemaIn, db: Session 
     
 # Put
 @client_router.put("/{id_client}", response_model=ClientSchemaOut, summary="Mise à jour des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
-async def get_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
+async def put_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
     """
     Permet de mettre à jour les informations d'un client à partir de son id_client.
 
