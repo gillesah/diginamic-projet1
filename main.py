@@ -6,12 +6,14 @@ from config.connexion import Base, engine
 from fastapi import FastAPI
 from src.models.client import Client
 from src.models.ouvrage import Ouvrage
+from src.models.commentaire import Commentaire
 # from models.theme import Theme
 # from models.commentaire import Commentaire
 # from models.theme_ouvrage import ThemeOuvrage
 # ??? import src.router ???
 from src.router.ouvrage_router import ouvrage_router
 from src.router.client_router import client_router
+from src.router.commentaire_router import commentaire_router
 
 Base.metadata.create_all(engine)
 
@@ -29,3 +31,4 @@ app = FastAPI()
 # router d'Ouvrage
 app.include_router(ouvrage_router)
 app.include_router(client_router)
+app.include_router(commentaire_router)
