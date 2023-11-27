@@ -6,6 +6,8 @@ class Commentaire(BaseModel):
     date_publication_commentaire : Date 
     auteur_commentaire : str 
     titre_commentaire : str 
+    id_client : int
+    id_ouvrage :int
     
     class Config:
         orm_mode = True
@@ -14,9 +16,7 @@ class Commentaire(BaseModel):
 class Commentaire_create(Commentaire):
     date_publication_commentaire : Date 
     auteur_commentaire : str 
-    titre_commentaire : str 
-    id_client : int constraint foreign key
-    id_ouvrage :int constraint foreign key
+    titre_commentaire : str
     
 class CommentaireUpdate(Commentaire):
     auteur_commentaire : str 
@@ -27,5 +27,5 @@ class CommentaireResponse(BaseModel):
     date_publication_commentaire : Date 
     auteur_commentaire : str 
     titre_commentaire : str 
-    id_client : int constraint foreign key
-    id_ouvrage :int constraint foreign key
+    id_client : int
+    id_ouvrage :int
