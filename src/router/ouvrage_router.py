@@ -146,3 +146,4 @@ async def patch_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Sess
 
     db.commit()
     return db_ouvrage
+ 

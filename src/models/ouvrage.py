@@ -9,6 +9,8 @@ class Ouvrage(Base):
     __tablename__ = "Ouvrage"
     id_ouvrage: Mapped[int] = Column(
         Integer, primary_key=True, autoincrement=True)
+    child: Mapped["Theme"] = relationship(back_populates="parent")
+
     titre_ouvrage: Mapped[str] = mapped_column(String(255))
     auteur_ouvrage: Mapped[str] = mapped_column(String(255))
     isbn_ouvrage: Mapped[str] = mapped_column(String(20))
@@ -24,4 +26,3 @@ class Ouvrage(Base):
     description_ouvrage: Mapped[str] = mapped_column(String(255))
 
 
-#foreign key
