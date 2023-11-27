@@ -11,7 +11,7 @@ ouvrage_router = APIRouter()
 
 
 # GET : lecture d'un ouvrages
-@ouvrage_router.get("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.get("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage par id")
 def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
     """
     lecture des informations d'un ouvrage de la base de données.
@@ -32,7 +32,7 @@ def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
 
 
 # GET : lecture des ouvrages
-@ouvrage_router.get("/ouvrages", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.get("/ouvrages", status_code=status.HTTP_200_OK, summary="Lecture des ouvrages")
 def read_ouvrages(db: Session = Depends(get_db)):
     """
     lecture de tous les ouvrages de la base de données.
@@ -48,7 +48,7 @@ def read_ouvrages(db: Session = Depends(get_db)):
 
 
 # POST : création d'un ouvrage
-@ouvrage_router.post("/ouvrages/", status_code=status.HTTP_201_CREATED, summary="Lecture d'un ouvrage")
+@ouvrage_router.post("/ouvrages/", status_code=status.HTTP_201_CREATED, summary="Création d'un ouvrage")
 def create_ouvrage(ouvrage: OuvrageCreate, db: Session = Depends(get_db)):
     """
     Création d'un ouvrage dans la base de données.
@@ -69,7 +69,7 @@ def create_ouvrage(ouvrage: OuvrageCreate, db: Session = Depends(get_db)):
 
 
 # DELETE : suppression d'un ouvrage
-@ouvrage_router.delete("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.delete("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Suppression d'un ouvrage")
 def delete_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
     """
     Supprime un ouvrage de la base de données.
@@ -97,7 +97,7 @@ def delete_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
 
 
 # PUT : mise à jour d'un Ouvrage
-@ouvrage_router.put("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.put("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK, summary="Mise à jour d'un ouvrage")
 async def update_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Session = Depends(get_db)):
     """
     mise à jour d'un ouvrage de la base de données.
@@ -122,7 +122,7 @@ async def update_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Ses
 
 
 # PATH
-@ouvrage_router.patch("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK)
+@ouvrage_router.patch("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK, summary="Mise à jour partielle d'un ouvrage")
 async def patch_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Session = Depends(get_db)):
     """
     Mise à jour partielle d'un ouvrage dans la base de données.
