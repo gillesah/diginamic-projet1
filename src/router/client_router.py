@@ -69,7 +69,7 @@ async def get_client(id_client: int, db: Session = Depends(get_db)):
 @client_router.patch("/{id_client}", response_model=ClientSchemaOut, summary="Mise à jour partielle des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
 async def get_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
     """
-    Permet de mettre à jour les informations d'un client à partir de son id_client.
+    Permet de mettre à jour de façon partielle les informations d'un client à partir de son id_client.
 
     Args:
         id_client (int): id du client.
@@ -85,6 +85,30 @@ async def get_client(id_client: int, client_update: ClientSchemaIn, db: Session 
         for key, value in update_data.items():
             if hasattr(client, key):
                 setattr(client, key, value)
+        db.commit()
+        return client
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="client not found")
+    
+    
+# Put
+@client_router.put("/{id_client}", response_model=ClientSchemaOut, summary="Mise à jour des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
+async def get_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
+    """
+    Permet de mettre à jour les informations d'un client à partir de son id_client.
+
+    Args:
+        id_client (int): id du client.
+        client_update (ClientSchemaIn): informations client à modifier à partir du schema ClientSchemaIn.
+        db (Session): la session de connection à la base de donnée.
+
+    Returns:
+        Les informations du client après modification.
+    """
+    try:
+        client = db.get(Client, id_client)
+        for key, value in client_update.dict().items():
+            setattr(client, key, value)
         db.commit()
         return client
     except Exception as e:
