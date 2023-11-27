@@ -122,3 +122,27 @@ async def update_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Ses
 
 
 # PATH
+@ouvrage_router.patch("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK)
+async def patch_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Session = Depends(get_db)):
+    """
+    Mise à jour partielle d'un ouvrage dans la base de données.
+
+    Args:
+        id_ouvrage: L'identifiant de l'ouvrage à mettre à jour.
+        ouvrage_update: Les éléments à modifier à partir du schéma OuvrageUpdate.
+        db: La session de base de données.
+
+    Returns:
+        L'ouvrage après modification.
+    """
+    db_ouvrage = db.get(Ouvrage, id_ouvrage)
+    if db_ouvrage is None:
+        raise HTTPException(status_code=404, detail="Ouvrage not found")
+
+    update_data = ouvrage_update.dict(exclude_unset=True)
+    for key, value in update_data.items():
+        if hasattr(db_ouvrage, key):
+            setattr(db_ouvrage, key, value)
+
+    db.commit()
+    return db_ouvrage
