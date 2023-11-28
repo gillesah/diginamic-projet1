@@ -107,7 +107,10 @@ async def put_client(id_client: int, client_update: ClientSchemaIn, db: Session 
     """
     client = db.get(Client, id_client)
     if client:
-        for key, value in client_update.dict().items():
+        update_data = client_update.dict()
+        for key, value in update_data.items():
+            if ((key == "nom_client") or (key == "prenom_client") or (key == "email_client")) and (not value):
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="requiered value is empty")
             setattr(client, key, value)
         db.commit()
         return client
