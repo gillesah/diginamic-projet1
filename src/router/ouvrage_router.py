@@ -149,7 +149,7 @@ async def patch_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Sess
     return db_ouvrage
 
 
-# RECHERCHE ok
+# RECHERCHE avec différents champs
 @ouvrage_router.get("/search", response_model=List[OuvrageStrict], status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
 def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, langue: Optional[str] = None, db: Session = Depends(get_db)):
     query = db.query(Ouvrage)

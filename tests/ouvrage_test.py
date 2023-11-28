@@ -23,7 +23,7 @@ invalid_ouvrage = {
     "description_ouvrage": "string",
 }
 valid_ouvrage = {
-    "titre_ouvrage": "",
+    "titre_ouvrage": "Titre de l'ouvrage",
     "auteur_ouvrage": "testunitest",
     "isbn_ouvrage": "string",
     "langue_ouvrage": "Breton",
