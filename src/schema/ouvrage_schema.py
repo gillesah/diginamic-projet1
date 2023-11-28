@@ -18,7 +18,7 @@ class OuvrageStrict(BaseModel):
     table_des_matieres_ouvrage: str
     mot_cle_ouvrage: str
     description_ouvrage: str
-    themes: List[ThemeResponse] = []
+    themes: List[ThemeResponse]
 
 
 class OuvrageUpdate(BaseModel):

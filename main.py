@@ -4,13 +4,7 @@ from sqlalchemy import String, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session, sessionmaker
 from config.connexion import Base, engine
 from fastapi import FastAPI
-from src.models.client import Client
-from src.models.ouvrage import Ouvrage
-from src.models.commentaire import Commentaire
-# from models.theme import Theme
-# from models.commentaire import Commentaire
-# from models.theme_ouvrage import ThemeOuvrage
-# ??? import src.router ???
+
 from src.router.ouvrage_router import ouvrage_router
 from src.router.client_router import client_router
 from src.router.commentaire_router import commentaire_router
