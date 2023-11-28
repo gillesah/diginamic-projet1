@@ -27,5 +27,5 @@ class Ouvrage(Base):
     mot_cle_ouvrage: Mapped[str] = mapped_column(String(255))
     description_ouvrage: Mapped[str] = mapped_column(String(255))
 
-    children: Mapped[List[Theme]] = relationship(
-        secondary=theme_ouvrage_association)
+    themes: Mapped[List["Theme"]] = relationship(
+        secondary="theme_ouvrage", back_populates="ouvrages")
