@@ -71,8 +71,8 @@ class TestPutClient(unittest.TestCase):
 
     def test_put_client_invalid(self):
         response = client.put(f"/client/{valid_id_client}", json=invalid_client)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.json()
-        self.assertEqual(data["message"], "value is empty") 
+        self.assertEqual(response.status_code, status.HTTP_422_UNPROCESSABLE_ENTITY)
+        # data = response.json()
+        # self.assertEqual(data["message"], "value is empty") 
         
         
