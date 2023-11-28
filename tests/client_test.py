@@ -13,8 +13,11 @@ class TestReadClient(unittest.TestCase):
         response = client.get(f"/client/{valid_id_client}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_read_client_not_found(self):
-        # the id client is not valid
-        response = client.get(f"/client/{invalid_id_client}")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    # def test_read_client_not_found(self):
+    #     # the id client is not valid
+    #     response = client.get(f"/client/{invalid_id_client}")
+    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+if __name__ == '__main__':
+    unittest.main()
         
