@@ -17,8 +17,8 @@ async def create_Commentaire(commentaire : CommentaireCreate, client_id : int, o
 
 @commentaire_router.get("/commentaires/", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation de toute les occurences de commentaires.")
 async def read_commentaires(db: Session = Depends(get_db)):
-    commentaires = db.query(Commentaire).all()
-    return commentaires
+    db_commentaires = db.query(Commentaire).all()
+    return db_commentaires
         
 
 @commentaire_router.get("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une occurence d'apres un id.")
@@ -29,22 +29,20 @@ async def read_commentaire(commentaire_id : int, db: Session = Depends(get_db)):
     else : 
         raise HTTPException(status_code=404, detail="Comment not found.")
 
-@commentaire_router.get("/commentaires/clients{id_client}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaire écrit par un client.")
+@commentaire_router.get("/commentairesduclient/{id_client}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaire écrit par un client.")
 async def read_commentaire_client(client_id : int, db: Session = Depends(get_db)):
-    db_commentaire = select(CommentaireResponse).where(CommentaireResponse.id_client == client_id)
+    db_commentaire = db.query(Commentaire).filter(Commentaire.id_client == client_id)
     if db_commentaire:
-        result = db.scalars(db_commentaire).all()
-        return result
-    else: 
+        return db_commentaire
+    else : 
         raise HTTPException(status_code=404, detail="Comment not found.")
     
-@commentaire_router.get("/commentaires/ouvrages/{id_ouvrage}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaires concernant un ouvrage.")
+@commentaire_router.get("/commentairesdelouvrage/{id_ouvrage}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaires concernant un ouvrage.")
 async def read_commentaire_ouvrage(ouvrage_id : int, db: Session = Depends(get_db)):
-    db_commentaire = select(CommentaireResponse).where(CommentaireResponse.id_ouvrage == ouvrage_id)
+    db_commentaire = db.query(Commentaire).filter(Commentaire.id_ouvrage == ouvrage_id)
     if db_commentaire:
-        result = db.scalars(db_commentaire).all()
-        return result
-    else: 
+        return db_commentaire
+    else : 
         raise HTTPException(status_code=404, detail="Comment not found.")
     
 @commentaire_router.put("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="modification complete d'une occurence.")

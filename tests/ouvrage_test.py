@@ -50,7 +50,7 @@ class TestReadOuvrage(unittest.TestCase):
         response = client.get(f"/ouvrages/{invalid_id_ouvrage }")
         self.assertEqual(response.status_code, 404)
 
-
+   
 class TestPatchOuvrage(unittest.TestCase):
 
     def test_patch_ouvrage_success(self):
