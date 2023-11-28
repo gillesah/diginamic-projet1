@@ -8,7 +8,7 @@ from typing import List, Optional
 from sqlalchemy import or_
 
 app = FastAPI()
-ouvrage_router = APIRouter()
+ouvrage_router = APIRouter(tags=["Ouvrage"])
 
 
 # GET : lecture d'un ouvrages
