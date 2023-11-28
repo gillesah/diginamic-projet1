@@ -8,8 +8,8 @@ client = TestClient(app)
 valid_id_ouvrage = 3
 invalid_id_ouvrage = 99999
 invalid_ouvrage = {
-    "titre_ouvrage": "Titre de l'ouvrage",
-    "auteur_ouvrage": "testunitest",
+    "titre_ouvrage": "",
+    "auteur_ouvrage": "",
     "isbn_ouvrage": "string",
     "langue_ouvrage": "Breton",
     "prix_ouvrage": 10.0,
@@ -23,7 +23,7 @@ invalid_ouvrage = {
     "description_ouvrage": "string",
 }
 valid_ouvrage = {
-    "titre_ouvrage": "Titre de l'ouvrage",
+    "titre_ouvrage": "",
     "auteur_ouvrage": "testunitest",
     "isbn_ouvrage": "string",
     "langue_ouvrage": "Breton",

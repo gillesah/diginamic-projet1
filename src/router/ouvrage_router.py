@@ -111,7 +111,7 @@ async def update_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Ses
     Returns:
         L'ouvrage modifié
     """
-    db_ouvrage = db.get(Ouvrage, id_ouvrage) or None
+    db_ouvrage = db.get(Ouvrage, id_ouvrage)
     if db_ouvrage is not None:
         for key, value in ouvrage_update.dict().items():
             # attribuer les nouvelles valeurs avec setattr
