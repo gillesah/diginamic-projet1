@@ -92,7 +92,7 @@ async def patch_client(id_client: int, client_update: ClientSchemaPatch, db: Ses
     
     
 # Put
-@client_router.put("/{id_client}", response_model=ClientSchemaOut, summary="Mise à jour des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
+@client_router.put("/{id_client}", response_model=dict|ClientSchemaOut, summary="Mise à jour des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
 async def put_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
     """
     Permet de mettre à jour les informations d'un client à partir de son id_client.
@@ -107,7 +107,10 @@ async def put_client(id_client: int, client_update: ClientSchemaIn, db: Session 
     """
     client = db.get(Client, id_client)
     if client:
-        for key, value in client_update.dict().items():
+        update_data = client_update.dict()
+        for key, value in update_data.items():
+            if ((key == "nom_client") or (key == "prenom_client") or (key == "email_client")) and (not value):
+                return {"message": "value is empty"}
             setattr(client, key, value)
         db.commit()
         return client

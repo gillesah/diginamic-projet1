@@ -69,10 +69,10 @@ class TestPutClient(unittest.TestCase):
         for key in valid_client.keys():
             self.assertEqual(data[key], valid_client[key])
 
-    # def test_put_client_invalid(self):
-    #     response = client.put(f"/client/{valid_id_client}", json=invalid_client)
-    #     data = response.json()
-    #     for key in valid_client.keys():
-    #         self.assertEqual(data[key], invalid_client[key])
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    def test_put_client_invalid(self):
+        response = client.put(f"/client/{valid_id_client}", json=invalid_client)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.json()
+        self.assertEqual(data["message"], "value is empty") 
+        
         
