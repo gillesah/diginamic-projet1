@@ -14,7 +14,10 @@ from src.models.commentaire import Commentaire
 from src.router.ouvrage_router import ouvrage_router
 from src.router.client_router import client_router
 from src.router.commentaire_router import commentaire_router
+<<<<<<< HEAD
 import uvicorn
+=======
+>>>>>>> BenjaminH
 from src.router.theme_router import theme_router
 
 Base.metadata.create_all(engine)
@@ -23,7 +26,10 @@ app.include_router(ouvrage_router)
 app.include_router(client_router)
 app.include_router(commentaire_router)
 app.include_router(theme_router)
+<<<<<<< HEAD
 
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+=======
+>>>>>>> BenjaminH
