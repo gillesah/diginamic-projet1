@@ -174,7 +174,32 @@ def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, la
     else:
         raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
 
+# RECHERCHE 2 ok
 
+
+@ouvrage_router.get("/search2", response_model=List[OuvrageStrict], status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
+def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, langue: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(Ouvrage)
+
+    # Construire dynamiquement la liste des filtres
+    filters = []
+    if titre:
+        filters.append(Ouvrage.titre_ouvrage.contains(titre))
+    if auteur:
+        filters.append(Ouvrage.auteur_ouvrage.contains(auteur))
+    if langue:
+        filters.append(Ouvrage.langue_ouvrage.contains(langue))
+
+    # Appliquer les filtres
+    if filters:
+        query = query.filter(or_(*filters))
+
+    ouvrages = query.all()
+
+    if ouvrages:
+        return ouvrages
+    else:
+        raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
 # brouillon
 # @ouvrage_router.get("/search", response_model=List[OuvrageStrict], status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
 # def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, langue: Optional[str] = None, db: Session = Depends(get_db)):
