@@ -12,7 +12,7 @@ ouvrage_router = APIRouter()
 
 
 # GET : lecture d'un ouvrages
-@ouvrage_router.get("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage par id")
+@ouvrage_router.get("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage par id")
 def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
     """
     lecture des informations d'un ouvrage de la base de données.

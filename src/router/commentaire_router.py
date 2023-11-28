@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException, status, APIRouter, Depends
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 from config.connexion import get_db
 from src.models.client import Client
