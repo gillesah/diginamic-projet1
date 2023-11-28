@@ -10,4 +10,4 @@ class Theme(Base):
     id_theme: Mapped[int] = mapped_column(
         primary_key=True, autoincrement=True)
     nom_theme: Mapped[str] = mapped_column(String(255))
-    ouvrage_id: Mapped[int] = mapped_column(ForeignKey("Ouvrage.id"))
+    ouvrage_id: Mapped[int] = mapped_column(ForeignKey("Ouvrage.id_ouvrage"))
