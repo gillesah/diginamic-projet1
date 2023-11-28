@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from datetime import date
 from typing import List
-from .theme_schema import ThemeResponse
+from .theme_schema import ThemeId, Theme, ThemeResponse
 
 
 class OuvrageStrict(BaseModel):
@@ -35,3 +35,4 @@ class OuvrageUpdate(BaseModel):
     table_des_matieres_ouvrage: str | None = None
     mot_cle_ouvrage: str | None = None
     description_ouvrage: str | None = None
+    themes: List[ThemeId] = []
