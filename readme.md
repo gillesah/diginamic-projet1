@@ -1,5 +1,5 @@
 
-# fil_rouge_tp7_python
+# Test API python sqlalchemy
 
 ## Description
 Ce projet de creation d'une API a été réalisé dans le cadre de notre formation en tant que developpeur fullstack chez Diginamic. Il s'agit d'une application développée en Python 3.11, utilisant plusieurs librairies et frameworks pour différentes fonctionnalités.
