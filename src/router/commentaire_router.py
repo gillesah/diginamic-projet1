@@ -2,6 +2,8 @@ from fastapi import FastAPI, HTTPException, status, APIRouter, Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from config.connexion import get_db
+from src.models.client import Client
+from src.models.ouvrage import Ouvrage
 from src.models.commentaire import Commentaire
 from src.schema.commentaire_schema import CommentaireCreate, CommentaireResponse, CommentaireUpdate
 
@@ -75,17 +77,12 @@ async def read_commentaire_client(client_id : int, db: Session = Depends(get_db)
         client_id (int): l'id du client recherché
         db (Session, optional): a ne pas renseigner par l'utilisateur, est la connexion a la bdd | Defaults to Depends(get_db).
 
-    Raises:
-        HTTPException: renvoie un message si il n'existe pas de commentaire pour le client recherché
-
     Returns:
-        La liste des commentaires concernants un client spécifique, avec les infos habituelles
+        La liste des commentaires concernants un client spécifique, avec les infos habituelles, vide si le client n'a pas écrit de commentaire
     """
     db_commentaire = db.query(Commentaire).filter(Commentaire.id_client == client_id)
     if db_commentaire:
         return db_commentaire
-    else : 
-        raise HTTPException(status_code=404, detail="Comment not found.")
     
 #GET : retourne tous les commentaires qu'un ouvrage a pu recevoir
 @commentaire_router.get("/commentairesdelouvrage/{id_ouvrage}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaires concernant un ouvrage.")
@@ -97,17 +94,38 @@ async def read_commentaire_ouvrage(ouvrage_id : int, db: Session = Depends(get_d
         ouvrage_id (int): l'id de l'ouvrage 
         db (Session, optional): a ne pas renseigner par l'utilisateur, est la connexion a la bdd | Defaults to Depends(get_db).
 
-    Raises:
-        HTTPException: renvoie un message si il n'existe pas de commentaires pour l'ouvrage spécifié
-
     Returns:
-        La liste des commentaires concernants un ouvrage spécifique, avec les infos habituelles 
+        La liste des commentaires concernants un ouvrage spécifique, avec les infos habituelles , vide si il n'y en a pas
     """
     db_commentaire = db.query(Commentaire).filter(Commentaire.id_ouvrage == ouvrage_id)
     if db_commentaire:
         return db_commentaire
+
+#GET : retourne tous les commentaires qu'un client a écrit pour un ouvrage 
+@commentaire_router.get("/commentairesduclient/{id_client}/commentairesdelouvrage/{id_ouvrage}", response_model=list[CommentaireResponse], tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="visualisation d'une liste de commentaires ecrit par un client pour un ouvrage.")
+async def read_commentaire_ouvrage(client_id : int, ouvrage_id : int, db: Session = Depends(get_db)):
+    """
+        Retourne la liste des commentaires d'un client a écrit pour un ouvrage
+
+    Args:
+        client_id (int): l'id du client recherché /!\ doit exister dans la table Client
+        ouvrage_id (int): l'id de l'ouvrage recherché /!\ doit exister dans la table Ouvrage 
+        db (Session, optional): _description_. Defaults to Depends(get_db).
+
+    Raises:
+        HTTPException: renvoie un message si le client ou l'ouvrage n'existe pas dans la bdd
+
+    Returns:
+        La liste des commentaires lié au client et a l'ouvrage, vide si il n'y en a pas
+    """
+    db_client = db.get(Client, client_id)
+    db_ouvrage = db.get(Ouvrage, ouvrage_id)
+    if db_client and db_ouvrage :     
+        db_commentaire = db.query(Commentaire).filter(Commentaire.id_client == client_id).filter(Commentaire.id_ouvrage == ouvrage_id)
+        if db_commentaire:
+            return db_commentaire
     else : 
-        raise HTTPException(status_code=404, detail="Comment not found.")
+        raise HTTPException(status_code=404, detail = "client or ouvrage not found" )
     
 #PUT : la modification complete d'un commentaire concernant un client et un ouvrage /!\ on ne peut pas modifier le client et l'ouvrage
 @commentaire_router.put("/commentaires/{id_commentaire}", response_model=CommentaireResponse, tags=["Commentaires"], status_code=status.HTTP_200_OK, summary="modification complete d'une occurence.")
