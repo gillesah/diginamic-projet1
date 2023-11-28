@@ -183,50 +183,9 @@ def ouvrage_search(requete_user: str, db: Session = Depends(get_db)):
     requete_user = requete_user.lower()
     resultats = []
     for ouvrage in ouvrages:
-        if requete_user in ouvrage.titre_ouvrage or requete_user in ouvrage.auteur_ouvrage:
+        if requete_user in ouvrage.titre_ouvrage.lower() or requete_user in ouvrage.auteur_ouvrage.lower() or requete_user in ouvrage.langue_ouvrage.lower() or requete_user in ouvrage.categorie_ouvrage.lower() or requete_user in ouvrage.description_ouvrage.lower() or requete_user in ouvrage.mot_cle_ouvrage.lower():
             resultats.append(ouvrage)
     if resultats:
         return resultats
     else:
         raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
-        # elif requete_user in ouvrage.auteur_ouvrage:
-        #     return ouvrage
-        # elif requete_user in ouvrage.langue_ouvrage:
-        #     return ouvrage
-        # titre_ouvrage = str(Ouvrage.titre_ouvrage)
-        # if requete_user in titre_ouvrage:
-        #     return ouvrage
-        #     # filters.append(Ouvrage.titre_ouvrage.contains(requete_user))
-        # elif requete_user == Ouvrage.auteur_ouvrage:
-        #     return ouvrage
-        # elif requete_user == Ouvrage.langue_ouvrage:
-        #     return ouvrage
-
-        # else:
-        #     raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
-
-
-# brouillon
-# @ouvrage_router.get("/search", response_model=List[OuvrageStrict], status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
-# def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, langue: Optional[str] = None, db: Session = Depends(get_db)):
-#     query = db.query(Ouvrage)
-
-#     # Construire dynamiquement la liste des filtres
-#     filters = []
-#     if titre:
-#         filters.append(Ouvrage.titre_ouvrage.contains(titre))
-#     if auteur:
-#         filters.append(Ouvrage.auteur_ouvrage.contains(auteur))
-#     if langue:
-#         filters.append(Ouvrage.langue_ouvrage.contains(langue))
-
-#     # Appliquer les filtres
-#     if filters:
-#         query = query.filter(or_(*filters))
-
-#     ouvrages = query.all()
-
-#     if ouvrages:
-#         return ouvrages
-#     else:
-#         raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
