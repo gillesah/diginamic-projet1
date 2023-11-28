@@ -40,9 +40,6 @@ valid_ouvrage = {
 
 
 class TestReadOuvrage(unittest.TestCase):
-    # def setUp(self):
-    #     self.client = TestClient(app)
-
     def test_read_ouvrage_success(self):
         # id normalement valide
         response = client.get(f"/ouvrages/{valid_id_ouvrage}")
