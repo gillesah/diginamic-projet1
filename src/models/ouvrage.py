@@ -1,14 +1,18 @@
 from config.connexion import Base
-from sqlalchemy import String, Date, Numeric, Integer, Column
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, Date, Numeric, Integer, Column, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date
 from pydantic import BaseModel
+from .theme_ouvrage import theme_ouvrage_association
+from .theme import Theme
+from typing import Optional, List
 
 
 class Ouvrage(Base):
     __tablename__ = "Ouvrage"
-    id_ouvrage: Mapped[int] = Column(
-        Integer, primary_key=True, autoincrement=True)
+    id_ouvrage: Mapped[int] = mapped_column(
+        primary_key=True, autoincrement=True)
+
     titre_ouvrage: Mapped[str] = mapped_column(String(255))
     auteur_ouvrage: Mapped[str] = mapped_column(String(255))
     isbn_ouvrage: Mapped[str] = mapped_column(String(20))
@@ -23,18 +27,5 @@ class Ouvrage(Base):
     mot_cle_ouvrage: Mapped[str] = mapped_column(String(255))
     description_ouvrage: Mapped[str] = mapped_column(String(255))
 
-
-class OuvrageCreate(BaseModel):
-    titre_ouvrage: str
-    auteur_ouvrage: str
-    isbn_ouvrage: str
-    langue_ouvrage: str
-    prix_ouvrage: float
-    date_parution_ouvrage: date
-    categorie_ouvrage: str
-    date_disponibilite_libraire_ouvrage: date
-    date_disponibilite_particulier_ouvrage: date
-    image_ouvrage: str
-    table_des_matieres_ouvrage: str
-    mot_cle_ouvrage: str
-    description_ouvrage: str
+    children: Mapped[List[Theme]] = relationship(
+        secondary=theme_ouvrage_association)

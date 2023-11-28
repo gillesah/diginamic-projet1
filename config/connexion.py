@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine, ForeignKey, String, select
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from decouple import config
-from sqlalchemy.orm import sessionmaker
 
 
 class Base(DeclarativeBase):
@@ -20,11 +19,21 @@ host = config("DB_HOST")
 database = "Librairie"
 
 engine = create_engine(f"{connector}://{user}:{password}@{host}/{database}")
-conn = engine.connect()
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# conn = engine.connect()
 
+Session = sessionmaker(bind=engine)
+
+# Fonction pour donner la connexion à la BDD aux routes.
+def get_db():
+    try:
+        db = Session()
+        yield db
+    finally:
+        db.close()
 
 # créer les tables
+
+
 class Base(DeclarativeBase):
     pass
 
