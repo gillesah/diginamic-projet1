@@ -174,13 +174,14 @@ def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, la
     else:
         raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
 
-# RECHERCHE 2 ok
 
-
-@ouvrage_router.get("/search2", response_model=List[OuvrageUpdate],  status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
+# RECHERCHE par une requete unique
+@ouvrage_router.get("/search2", response_model=List[OuvrageUpdate],  status_code=status.HTTP_200_OK, summary="Recherche avec une requête unique des ouvrages")
 def ouvrage_search(requete_user: str, db: Session = Depends(get_db)):
     ouvrages = db.query(Ouvrage).all()
+    # mise en minuscule de la requete utilisateur
     requete_user = requete_user.lower()
+    # on met tous les résultats dans une liste
     resultats = []
     for ouvrage in ouvrages:
         if requete_user in ouvrage.titre_ouvrage.lower() or requete_user in ouvrage.auteur_ouvrage.lower() or requete_user in ouvrage.langue_ouvrage.lower() or requete_user in ouvrage.categorie_ouvrage.lower() or requete_user in ouvrage.description_ouvrage.lower() or requete_user in ouvrage.mot_cle_ouvrage.lower():
