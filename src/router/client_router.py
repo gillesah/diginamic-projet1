@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from config.connexion import get_db
 from src.models.client import Client
-from src.schema.client_schema import ClientSchema, ClientSchemaIn, ClientSchemaOut
+from src.schema.client_schema import ClientSchema, ClientSchemaIn, ClientSchemaOut, ClientSchemaPatch
 from typing import List
 
 client_router = APIRouter(tags=["client"], prefix="/client")
@@ -67,7 +67,7 @@ async def get_client(id_client: int, db: Session = Depends(get_db)):
 
 # Patch
 @client_router.patch("/{id_client}", response_model=ClientSchemaOut, summary="Mise à jour partielle des informations d'un client à partir de son id_client", status_code=status.HTTP_200_OK)
-async def patch_client(id_client: int, client_update: ClientSchemaIn, db: Session = Depends(get_db)):
+async def patch_client(id_client: int, client_update: ClientSchemaPatch, db: Session = Depends(get_db)):
     """
     Permet de mettre à jour de façon partielle les informations d'un client à partir de son id_client.
 
@@ -79,15 +79,15 @@ async def patch_client(id_client: int, client_update: ClientSchemaIn, db: Sessio
     Returns:
         Les informations du client après modification.
     """
-    try:
-        client = db.get(Client, id_client)
+    client = db.get(Client, id_client)
+    if client:
         update_data = client_update.dict(exclude_unset=True)
         for key, value in update_data.items():
             if hasattr(client, key):
                 setattr(client, key, value)
         db.commit()
         return client
-    except Exception as e:
+    else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="client not found")
     
     
@@ -105,13 +105,13 @@ async def put_client(id_client: int, client_update: ClientSchemaIn, db: Session 
     Returns:
         Les informations du client après modification.
     """
-    try:
-        client = db.get(Client, id_client)
+    client = db.get(Client, id_client)
+    if client:
         for key, value in client_update.dict().items():
             setattr(client, key, value)
         db.commit()
         return client
-    except Exception as e:
+    else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="client not found")
     
     
@@ -128,10 +128,10 @@ async def delete_client(id_client: int, db: Session = Depends(get_db)):
     Returns:
         un message indiquant que les informations du client ont bien été supprimé.
     """
-    try:
-        client = db.get(Client, id_client)
+    client = db.get(Client, id_client)
+    if client:
         db.delete(client)
         db.commit()
         return {"message": "informations client supprimé"}
-    except Exception as e:
+    else:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="client not found")
