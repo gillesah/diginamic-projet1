@@ -2,16 +2,17 @@ from fastapi import FastAPI, HTTPException, status, APIRouter, Depends
 from sqlalchemy.orm import Session
 from config.connexion import Session, get_db
 from src.models.ouvrage import Ouvrage
-from src.schema.ouvrage_schema import OuvrageCreate, OuvrageUpdate
+from src.schema.ouvrage_schema import OuvrageStrict, OuvrageUpdate
 from fastapi.encoders import jsonable_encoder
-from typing import List
+from typing import List, Optional
+from sqlalchemy import or_
 
 app = FastAPI()
 ouvrage_router = APIRouter()
 
 
 # GET : lecture d'un ouvrages
-@ouvrage_router.get("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.get("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage par id")
 def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
     """
     lecture des informations d'un ouvrage de la base de données.
@@ -32,7 +33,7 @@ def read_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
 
 
 # GET : lecture des ouvrages
-@ouvrage_router.get("/ouvrages", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.get("/ouvrages", status_code=status.HTTP_200_OK, summary="Lecture des ouvrages")
 def read_ouvrages(db: Session = Depends(get_db)):
     """
     lecture de tous les ouvrages de la base de données.
@@ -48,13 +49,13 @@ def read_ouvrages(db: Session = Depends(get_db)):
 
 
 # POST : création d'un ouvrage
-@ouvrage_router.post("/ouvrages/", status_code=status.HTTP_201_CREATED, summary="Lecture d'un ouvrage")
-def create_ouvrage(ouvrage: OuvrageCreate, db: Session = Depends(get_db)):
+@ouvrage_router.post("/ouvrages/", status_code=status.HTTP_201_CREATED, summary="Création d'un ouvrage")
+def create_ouvrage(ouvrage: OuvrageStrict, db: Session = Depends(get_db)):
     """
     Création d'un ouvrage dans la base de données.
 
     Args:
-        ouvrage: à partir du shéma OuvrageCreate
+        ouvrage: à partir du shéma OuvrageStrict
         db: La session de base de données.
 
     Returns:
@@ -69,7 +70,7 @@ def create_ouvrage(ouvrage: OuvrageCreate, db: Session = Depends(get_db)):
 
 
 # DELETE : suppression d'un ouvrage
-@ouvrage_router.delete("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.delete("/ouvrages/{id_ouvrage}", status_code=status.HTTP_200_OK, summary="Suppression d'un ouvrage")
 def delete_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
     """
     Supprime un ouvrage de la base de données.
@@ -97,7 +98,7 @@ def delete_ouvrage(id_ouvrage: int, db: Session = Depends(get_db)):
 
 
 # PUT : mise à jour d'un Ouvrage
-@ouvrage_router.put("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK, summary="Lecture d'un ouvrage")
+@ouvrage_router.put("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK, summary="Mise à jour d'un ouvrage")
 async def update_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Session = Depends(get_db)):
     """
     mise à jour d'un ouvrage de la base de données.
@@ -122,7 +123,7 @@ async def update_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Ses
 
 
 # PATH
-@ouvrage_router.patch("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK)
+@ouvrage_router.patch("/ouvrages/{id_ouvrage}", response_model=OuvrageUpdate, status_code=status.HTTP_200_OK, summary="Mise à jour partielle d'un ouvrage")
 async def patch_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Session = Depends(get_db)):
     """
     Mise à jour partielle d'un ouvrage dans la base de données.
@@ -146,3 +147,80 @@ async def patch_ouvrage(id_ouvrage: int, ouvrage_update: OuvrageUpdate, db: Sess
 
     db.commit()
     return db_ouvrage
+
+
+# RECHERCHE ok
+@ouvrage_router.get("/search", response_model=List[OuvrageStrict], status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
+def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, langue: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(Ouvrage)
+
+    # Construire dynamiquement la liste des filtres
+    filters = []
+    if titre:
+        filters.append(Ouvrage.titre_ouvrage.contains(titre))
+    if auteur:
+        filters.append(Ouvrage.auteur_ouvrage.contains(auteur))
+    if langue:
+        filters.append(Ouvrage.langue_ouvrage.contains(langue))
+
+    # Appliquer les filtres
+    if filters:
+        query = query.filter(or_(*filters))
+
+    ouvrages = query.all()
+
+    if ouvrages:
+        return ouvrages
+    else:
+        raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
+
+# RECHERCHE 2 ok
+
+
+@ouvrage_router.get("/search2", response_model=List[OuvrageStrict], status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
+def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, langue: Optional[str] = None, db: Session = Depends(get_db)):
+    query = db.query(Ouvrage)
+
+    # Construire dynamiquement la liste des filtres
+    filters = []
+    if titre:
+        filters.append(Ouvrage.titre_ouvrage.contains(titre))
+    if auteur:
+        filters.append(Ouvrage.auteur_ouvrage.contains(auteur))
+    if langue:
+        filters.append(Ouvrage.langue_ouvrage.contains(langue))
+
+    # Appliquer les filtres
+    if filters:
+        query = query.filter(or_(*filters))
+
+    ouvrages = query.all()
+
+    if ouvrages:
+        return ouvrages
+    else:
+        raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
+# brouillon
+# @ouvrage_router.get("/search", response_model=List[OuvrageStrict], status_code=status.HTTP_200_OK, summary="Recherche des ouvrages")
+# def ouvrage_search(titre: Optional[str] = None, auteur: Optional[str] = None, langue: Optional[str] = None, db: Session = Depends(get_db)):
+#     query = db.query(Ouvrage)
+
+#     # Construire dynamiquement la liste des filtres
+#     filters = []
+#     if titre:
+#         filters.append(Ouvrage.titre_ouvrage.contains(titre))
+#     if auteur:
+#         filters.append(Ouvrage.auteur_ouvrage.contains(auteur))
+#     if langue:
+#         filters.append(Ouvrage.langue_ouvrage.contains(langue))
+
+#     # Appliquer les filtres
+#     if filters:
+#         query = query.filter(or_(*filters))
+
+#     ouvrages = query.all()
+
+#     if ouvrages:
+#         return ouvrages
+#     else:
+#         raise HTTPException(status_code=404, detail="Aucun ouvrage trouvé")
